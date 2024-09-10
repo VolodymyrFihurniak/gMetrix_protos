@@ -34,30 +34,24 @@ jobs:
           --go_out=$GEN_OUT_DIR \
           --go-grpc_out=$GEN_OUT_DIR \
           $(find $PROTO_DIR -type f -name '*.proto')
-        env:
-          GEN_OUT_DIR: gen/go
-          PROTO_DIR: proto
           
-      - name: Create release
-        run: |
-          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --local user.name "${{ github.actor }}"
-          TAG_EXISTS=$(git tag -l "$TAG")
-          if [ -z "$TAG_EXISTS" ]; then
-            git tag -a $TAG -m "Release $TAG"
-            git push origin $TAG
-          else
-            echo "Tag $TAG already exists. Skipping tag creation."
-          fi
-        env:
-          TAG: ${{ github.ref }}
-
-      - name: Push to GitHub
-        uses: ad-m/github-push-action@master
+      - name: Upload Generated Files as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          name: generated-proto
+          path: ${{ env.GEN_OUT_DIR }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.GEN_OUT_DIR }}/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     strategy:
       matrix:
         go-version: [ '1.23.x' ]
+
+    env:
+      GEN_OUT_DIR: gen/go
+      PROTO_DIR: proto
