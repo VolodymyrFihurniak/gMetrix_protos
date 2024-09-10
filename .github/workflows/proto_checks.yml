@@ -23,18 +23,4 @@ jobs:
       - name: Running linter, checking breaking changes
         run: |
           buf lint
-          buf breaking --against ".git#branch=${{ github.base_ref }}"          
-      - name: Installing protoc-gen-go
-        run: |
-          go get github.com/golang/protobuf/protoc-gen-go
-          go get google.golang.org/grpc/cmd/protoc-gen-go-grpc          
-      - name: Generating protos
-        run: |
-          mkdir -p $GEN_OUT_DIR &&
-          protoc -I=$PROTO_DIR \
-          --go_out=$GEN_OUT_DIR \
-          --go-grpc_out=$GEN_OUT_DIR \
-          $(find $PROTO_DIR -type f -name '*.proto')      
-        env:
-            GEN_OUT_DIR: gen/go
-            PROTO_DIR: proto
+          buf breaking --against ".git#branch=${{ github.base_ref }}"
