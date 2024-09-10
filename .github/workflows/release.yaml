@@ -30,6 +30,8 @@ jobs:
           protoc -I=$PROTO_DIR \
           --go_out=$GEN_OUT_DIR \
           --go-grpc_out=$GEN_OUT_DIR \
+          --go_opt=paths=source_relative \
+          --go-grpc_opt=paths=source_relative \
           $(find $PROTO_DIR -type f -name '*.proto')
 
       - name: Compress Generated Files into Archive
@@ -39,7 +41,7 @@ jobs:
       - name: Upload Generated Files as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: generated-proto.${{github.ref_name}}
+          name: generated-proto.${{github.ref_name}}.zip
           path: generated-proto.${{github.ref_name}}.zip
 
       - name: Create GitHub Release
