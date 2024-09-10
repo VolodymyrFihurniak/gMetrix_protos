@@ -1,0 +1,10 @@
+version: v1beta1
+package: gMetrix.protos
+buid:
+  roots:
+    use:
+      - BASIC
+      - FILE_LOWER_SNAKE_CASE
+breaking:
+  use:
+    - WIRE_JSON
