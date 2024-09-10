@@ -34,7 +34,7 @@ jobs:
 
       - name: Compress Generated Files into Archive
         run: |
-          zip -r generated-proto.${{github.ref}}.zip $GEN_OUT_DIR
+          zip -r generated-proto.${{github.ref_name}}.zip $GEN_OUT_DIR
 
       - name: Upload Generated Files as Artifact
         uses: actions/upload-artifact@v4
