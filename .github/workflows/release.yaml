@@ -9,19 +9,49 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          submodules: true
+      - name: Setup Go environment
+        uses: actions/setup-go@v3.3.0
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install dependencies
+        run: go get .
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
       - name: Install protoc-gen-go
-        run: go install github.com/golang/protobuf/protoc-gen-go
+        run: go get github.com/golang/protobuf/protoc-gen-go
       - name: Install protoc-gen-go-grpc
-        run: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-      - name: Release protos
-        run: |
-          protoc -I=$PROTO_DIR \
-          --go_out=$GEN_OUT_DIR \
-          $(find $PROTO_DIR -type f -name '*.proto')
+        run: go get google.golang.org/grpc/cmd/protoc-gen-go-grpc
+      # - name: Release protos
+      #   run: |
+      #     protoc -I=$PROTO_DIR \
+      #     --go_out=$GEN_OUT_DIR \
+      #     $(find $PROTO_DIR -type f -name '*.proto')
+      #   env:
+      #     GEN_OUT_DIR: contracts/build/go
+      #     PROTO_DIR: contracts/proto
+      - name: Generate grpc code
+        run: protoc -I=contracts/proto --go_out=contracts/build/go --go-grpc_out=contracts/build/go $(find contracts/proto -type f -name '*.proto')
         env:
           GEN_OUT_DIR: contracts/build/go
           PROTO_DIR: contracts/proto
-    env:
-      GO_VERSION: '1.23.1'
+      - name: Create release
+        run: |
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --local user.name "${{ github.actor }}"
+          git tag -a ${{ github.ref }} -m "Release ${{ github.ref }}"
+          git push origin ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push to GitHub
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+    strategy:
+      matrix:
+        go-version: [ '1.23.x', '1.22.x', '1.21.x' ]
