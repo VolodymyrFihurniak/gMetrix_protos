@@ -9,10 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-          submodules: true
+      - uses: actions/checkout@v4
           
       - name: Setup Go environment
         uses: actions/setup-go@v5
@@ -43,6 +40,7 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{ env.GEN_OUT_DIR }}/**
         env:
