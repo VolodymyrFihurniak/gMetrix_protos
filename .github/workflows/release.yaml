@@ -36,19 +36,20 @@ jobs:
 
       - name: Compress Generated Files into Archive
         run: |
-          zip -r generated-proto.${{github.ref_name}}.zip $GEN_OUT_DIR
+          zip -r ${{github.workspace}}/generated-proto.${{github.ref_name}}.zip $GEN_OUT_DIR
 
       - name: Upload Generated Files as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: generated-proto.${{github.ref_name}}.zip
-          path: generated-proto.${{github.ref_name}}.zip
+          path: ${{github.workspace}}/generated-proto.${{github.ref_name}}.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref_name, 'refs/tags/')
         with:
-          files: ${{ github.workspace }}/generated-proto.${{github.ref_name}}.zip
+          files: |
+            ${{ github.workspace }}/generated-proto.${{github.ref_name}}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
