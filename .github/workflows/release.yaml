@@ -13,25 +13,31 @@ jobs:
         with:
           fetch-depth: 1
           submodules: true
+          
       - name: Setup Go environment
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
+          
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
-      - name: Installing protoc-gen-go
+        
+      - name: Installing protoc-gen-go and protoc-gen-go-grpc
         run: |
-          go get github.com/golang/protobuf/protoc-gen-go
-          go get google.golang.org/grpc/cmd/protoc-gen-go-grpc
+          go install github.com/golang/protobuf/protoc-gen-go@latest
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
       - name: Generating protos
         run: |
           mkdir -p $GEN_OUT_DIR &&
-          protoc -I=$PROTO_DIR \ 
-          --go_out=$GEN_OUT_DIR \ 
-          $(find $PROTO_DIR -type f -name '*.proto')          
+          protoc -I=$PROTO_DIR \
+          --go_out=$GEN_OUT_DIR \
+          --go-grpc_out=$GEN_OUT_DIR \
+          $(find $PROTO_DIR -type f -name '*.proto')
         env:
           GEN_OUT_DIR: gen/go
           PROTO_DIR: proto
+          
       - name: Create release
         run: |
           git config --local user.email "${{ github.actor }}@users.noreply.github.com"
@@ -40,6 +46,7 @@ jobs:
           git push origin ${{ github.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Push to GitHub
         uses: ad-m/github-push-action@master
         with:
