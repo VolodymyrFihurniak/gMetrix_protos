@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v3.21.12
-// source: sso/auth/v1/auth.proto
+// source: sso/v1/auth.proto
 
 package ssoauth
 
@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Register_FullMethodName     = "/proto.sso.auth.v1.AuthService/Register"
-	AuthService_Login_FullMethodName        = "/proto.sso.auth.v1.AuthService/Login"
-	AuthService_Logout_FullMethodName       = "/proto.sso.auth.v1.AuthService/Logout"
-	AuthService_RefreshToken_FullMethodName = "/proto.sso.auth.v1.AuthService/RefreshToken"
-	AuthService_IsAdmin_FullMethodName      = "/proto.sso.auth.v1.AuthService/IsAdmin"
-	AuthService_IsModerator_FullMethodName  = "/proto.sso.auth.v1.AuthService/IsModerator"
+	AuthService_Register_FullMethodName     = "/proto.sso.v1.AuthService/Register"
+	AuthService_Login_FullMethodName        = "/proto.sso.v1.AuthService/Login"
+	AuthService_Logout_FullMethodName       = "/proto.sso.v1.AuthService/Logout"
+	AuthService_RefreshToken_FullMethodName = "/proto.sso.v1.AuthService/RefreshToken"
+	AuthService_IsAdmin_FullMethodName      = "/proto.sso.v1.AuthService/IsAdmin"
+	AuthService_IsModerator_FullMethodName  = "/proto.sso.v1.AuthService/IsModerator"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -278,7 +278,7 @@ func _AuthService_IsModerator_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.sso.auth.v1.AuthService",
+	ServiceName: "proto.sso.v1.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -307,5 +307,5 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "sso/auth/v1/auth.proto",
+	Metadata: "sso/v1/auth.proto",
 }

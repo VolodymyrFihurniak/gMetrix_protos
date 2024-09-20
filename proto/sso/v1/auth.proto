@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package proto.sso.auth.v1;
+package proto.sso.v1;
 
-option go_package = "VolodymyrFihurniak/auth/v1;ssoauth";
+option go_package = "github.com/VolodymyrFihurniak/gMetrix_protos;ssoauth";
 
 service AuthService {
 	rpc Register(RegisterRequest) returns (RegisterResponse) {}
